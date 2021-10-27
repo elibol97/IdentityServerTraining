@@ -1,4 +1,6 @@
 ﻿using IdentityManagement.Infrastructure.Persistance;
+using IdentityManagement.Infrastructure.Services;
+using IdentityServer4.Services;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -32,9 +34,18 @@ namespace IdentityManagement.Infrastructure.Extensions
                 {
                     options.ConfigureDbContext = builder => builder.UseNpgsql(configuration.GetConnectionString("DefaultConnection"));
                     options.EnableTokenCleanup = true;
+                })
+                .AddConfigurationStore(options =>
+                {
+                    options.ConfigureDbContext = builder => builder.UseNpgsql(configuration.GetConnectionString("DefaultConnection"));          
                 }).AddAspNetIdentity<AppUser>();
             return services;
-        }        
+        }       
+        public static IServiceCollection AddServices<TUser>(this IServiceCollection services) where TUser : IdentityUser<int>,new()
+        {
+            services.AddTransient<IProfileService, IdentityClaimsProfileService>();
+            return services;
+        }
         
         
         public static IServiceCollection AddDatabaseConfiguration(this IServiceCollection services,string connectionString)

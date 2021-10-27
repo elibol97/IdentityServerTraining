@@ -34,7 +34,7 @@ namespace IdentityManagement.Infrastructure.Services
             claims = claims.Where(f => context.RequestedClaimTypes.Contains(f.Type)).ToList();
             claims.Add(new Claim(JwtClaimTypes.GivenName, user.Name));
             claims.Add(new Claim(JwtClaimTypes.Id, user.Id.ToString()));
-            claims.Add(new Claim("useremail@email.com", user.Email));
+            claims.Add(new Claim("email", user.Email));
             claims.Add(new Claim(ClaimTypes.Role,"user"));
 
             context.IssuedClaims = claims;
